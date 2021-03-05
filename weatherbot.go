@@ -5,20 +5,27 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 
 	simplejson "github.com/bitly/go-simplejson"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 func main() {
-	proxyUrl, err := url.Parse("http://127.0.0.1:8001")                                  //设置代理http或sock5
-	myClient := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}} //使用代理
-	bot, err := tgbotapi.NewBotAPIWithClient("1479970937:AAFKPdrFUmUCsnF4waRr4dZmLieY9Qj76-U", myClient)
+	/*
+		国内主机需要使用http代理
+		 proxyUrl, err := url.Parse("http://127.0.0.1:8001")                                  //设置代理http或sock5
+		myClient := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}} //使用代理
+		bot, err := tgbotapi.NewBotAPIWithClient("1479970937:AAFKPdrFUmUCsnF4waRr4dZmLieY9Qj76-U", myClient)
+	*/
+
+	// 创建一个新的BOT连接
+	bot, err := tgbotapi.NewBotAPI("1479970937:AAFKPdrFUmUCsnF4waRr4dZmLieY9Qj76-U")
 	if err != nil {
 		log.Panic(err)
 	}
+	// 开启debug
 	bot.Debug = true
+	//日志输出
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
