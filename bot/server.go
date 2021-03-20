@@ -16,7 +16,11 @@ func searchByText(t *tb.Message) {
 	if t.Text != "" {
 		keyWord := t.Payload
 		dates, _ := getAPIdate(keyWord, 1)
-		B.Send(t.Chat, dates)
+		var strs string
+		for _, str := range dates {
+			strs += str + "\n"
+		}
+		B.Send(t.Chat, strs)
 
 	}
 
