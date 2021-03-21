@@ -12,6 +12,7 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
+//按照传入的参数搜索
 func searchByText(t *tb.Message) {
 	if t.Text != "" {
 		keyWord := t.Payload

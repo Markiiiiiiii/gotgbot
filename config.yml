@@ -2,3 +2,4 @@ bot_token: 1479970937:AAFKPdrFUmUCsnF4waRr4dZmLieY9Qj76-U
 http_proxy: http://127.0.0.1:20171
 log:
   level: release
+  file: info.log

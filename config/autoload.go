@@ -5,15 +5,18 @@ import (
 	"go.uber.org/zap"
 )
 
+//自动初始化
 func init() {
+	//config文件读取设置
 	viper.SetConfigName("config")
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig()
 	if err != nil {
-		zap.S().Fatal(err)
+		zap.S().Fatal("Read config file faild ", err)
 		return
 	}
+	//读取token和proxy信息
 	BotToken = viper.GetString("bot_token")
 	HttpProxy = viper.GetString("http_proxy")
 }

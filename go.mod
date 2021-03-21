@@ -9,6 +9,6 @@ require (
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/technoweenie/multipartstreamer v1.0.1 // indirect
-	go.uber.org/zap v1.10.0
+	go.uber.org/zap v1.16.0
 	gopkg.in/tucnak/telebot.v2 v2.3.5
 )
