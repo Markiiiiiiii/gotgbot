@@ -2,6 +2,7 @@ package bot
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	simplejson "github.com/bitly/go-simplejson"
@@ -13,37 +14,35 @@ import (
 
 //按照传入的参数搜索
 func searchByText(t *tb.Message) {
-	zap.S().Infow("Handle func searchByText")
 	if t.Text != "" {
 		keyWord := t.Payload
-		dates, _ := getAPIdate(keyWord, config.Page)
+		dates, _ := getApiDate(keyWord, config.Page)
 		var strs string
 		for _, str := range dates {
 			strs += str + "\n"
 		}
 		B.Send(t.Chat, strs)
-		time.Sleep(time.Second * 10)
 	}
 
 }
 
-func getAPIdate(keyWord string, pageNumber int) (date []string, err error) {
-	zap.S().Infow("Keyword", keyWord,
-		"Pagenumber", pageNumber)
+func getApiDate(keyWord string, pageNumber int) (date []string, err error) {
+	zap.S().Infof("Search by Keyword: %s , Pagenumber: %d ", keyWord, pageNumber)
 	utmp := "https://api.dalipan.com/api/v1/pan/search?t=%d&kw=%s&page=%d&line=1&site=dalipan"
-	url := fmt.Sprintf(utmp, time.Now().Unix(), keyWord, pageNumber)
-
+	url := fmt.Sprintf(utmp, time.Now().Unix(), url.QueryEscape(keyWord), pageNumber)
 	body, err := fetch.Fetch(url)
 	if err != nil {
-		zap.S().Errorw("Read response date error ", err)
-		return nil, err
-	}
-	jsondate, err := simplejson.NewJson(body)
-	if err != nil {
-		zap.S().Errorw("SimpleJSON Umshall error", err)
+		zap.S().Errorf("Read response date error: %s ", err)
 		return nil, err
 	}
 	date = []string{}
+	jsondate, err := simplejson.NewJson(body)
+	if err != nil {
+		zap.S().Errorf("SimpleJSON Umshall error: %s", err)
+		date = append(date, "关键词:< "+keyWord+" >可能被屏蔽了")
+		return date, err
+	}
+
 	for i := 0; i < 29; i++ {
 		tmpdate, _ := jsondate.Get("resources").GetIndex(i).Get("res").Get("filename").String()
 		date = append(date, tmpdate)

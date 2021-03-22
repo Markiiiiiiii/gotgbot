@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"gotgbot.com/v0.01/config"
+	_ "gotgbot.com/v0.01/log"
 )
 
 var (
@@ -23,7 +24,7 @@ func init() {
 	// 使用http proxy创建连接
 	proxyurl, err := url.Parse(config.HttpProxy)
 	if err != nil {
-		zap.S().Errorw("Read http proxy faild", err)
+		zap.S().Errorf("Read http proxy faild: %s", err)
 	}
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -31,9 +32,7 @@ func init() {
 		},
 	}
 	//输出INFO到log
-	zap.S().Infow("Init bot token",
-		"token", config.BotToken,
-		"endpoint", apiurl)
+	zap.S().Infof("Init bot token %s, endpoint %s", config.BotToken, apiurl)
 	//创建一个bot实例
 	B, err = tb.NewBot(tb.Settings{
 		URL:    apiurl,
@@ -42,7 +41,7 @@ func init() {
 		Client: client,
 	})
 	if err != nil {
-		zap.S().Errorw("Creat bot faild", err)
+		zap.S().Errorf("Creat bot faild: %s", err)
 		return
 	}
 }

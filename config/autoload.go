@@ -13,7 +13,7 @@ func init() {
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig()
 	if err != nil {
-		zap.S().Fatal("Read config file faild ", err)
+		zap.S().Fatalf("Read config file faild: %s ", err)
 		return
 	}
 	//读取token和proxy信息

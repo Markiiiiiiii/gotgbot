@@ -11,7 +11,7 @@ func Fetch(url string) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		zap.S().Errorw("Create a new request error", err)
+		zap.S().Errorf("Create a new request error: %s", err)
 		return nil, err
 	}
 	//构建访问头
@@ -24,13 +24,18 @@ func Fetch(url string) ([]byte, error) {
 	//访问
 	reps, err := client.Do(req)
 	if err != nil {
-		zap.S().Errorw("Don't get a response error", err)
+		zap.S().Errorf("Don't get a response error: %s", err)
 		return nil, err
 	}
 	defer reps.Body.Close()
 
 	if reps.StatusCode != http.StatusOK {
-		zap.S().Infow("Don't get date from the URL")
+		zap.S().Errorf("Don't get date from the URL: %d", reps.StatusCode)
+		return nil, err
+	} else {
+		zap.S().Infof("Fetch response code: %d", reps.StatusCode)
+		zap.S().Infof("%s", reps.Body)
+		return ioutil.ReadAll(reps.Body)
 	}
-	return ioutil.ReadAll(reps.Body)
+
 }
