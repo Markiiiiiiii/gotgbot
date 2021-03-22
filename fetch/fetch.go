@@ -34,7 +34,6 @@ func Fetch(url string) ([]byte, error) {
 		return nil, err
 	} else {
 		zap.S().Infof("Fetch response code: %d", reps.StatusCode)
-		zap.S().Infof("%s", reps.Body)
 		return ioutil.ReadAll(reps.Body)
 	}
 
