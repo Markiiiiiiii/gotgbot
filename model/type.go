@@ -7,15 +7,15 @@ type Filelist struct {
 	Ext      string `json:"ext"`
 }
 type Res struct {
-	ID       string   `json:"id"`
-	Filename string   `json:"filename"`
-	Size     int64    `json:"size"`
-	Isdir    int      `json:"isdir"`
-	Pwd      string   `json:"pwd"`
-	Ctime    string   `json:"ctime"`
-	Utime    string   `json:"utime"`
-	Ext      string   `json:"ext"`
-	Flist    Filelist `json:"filelist"`
+	ID       string     `json:"id"`
+	Filename string     `json:"filename"`
+	Size     int64      `json:"size"`
+	Isdir    int        `json:"isdir"`
+	Pwd      string     `json:"pwd"`
+	Ctime    string     `json:"ctime"`
+	Utime    string     `json:"utime"`
+	Ext      string     `json:"ext"`
+	Flist    []Filelist `json:"filelist"`
 }
 type Highs struct {
 	FilelistFilename []string `json:"filelist.filename"`
