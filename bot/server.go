@@ -11,6 +11,7 @@ import (
 	"gotgbot.com/v0.01/config"
 	"gotgbot.com/v0.01/fetch"
 	"gotgbot.com/v0.01/model"
+	"gotgbot.com/v0.01/util"
 )
 
 //按照传入的参数搜索
@@ -44,7 +45,7 @@ func searchByText(t *tb.Message) {
 			context := ""
 			url := "http://www.dalipan.com"
 			for _, v := range dates.Resours {
-				context = context + fmt.Sprintf("[%s](%s)-[%d]\n", v.Ress.Filename, url, v.Ress.Size)
+				context = context + fmt.Sprintf("[%s](%s)-[%s]\n", v.Ress.Filename, url, util.FileSize(v.Ress.Size))
 			}
 			B.Send(t.Chat, context, &tb.SendOptions{
 				DisableWebPagePreview: true,
