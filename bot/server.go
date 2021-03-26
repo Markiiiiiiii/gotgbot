@@ -17,15 +17,15 @@ import (
 //按照传入的参数搜索
 func searchByText(t *tb.Message) {
 	//创建行内按钮，注册一个唯一的名称
-	setBtn := [][]tb.InlineButton{}
-	setBtn = append(setBtn, []tb.InlineButton{
+
+	SetBtn = append(SetBtn, []tb.InlineButton{
 		tb.InlineButton{
 			Unique: "next_btn",
 			Text:   "下一页",
 			Data:   "getCallBack:next",
 		},
 	})
-	setBtn = append(setBtn, []tb.InlineButton{
+	SetBtn = append(SetBtn, []tb.InlineButton{
 		tb.InlineButton{
 			Unique: "pre_btn",
 			Text:   "上一页",
@@ -51,7 +51,7 @@ func searchByText(t *tb.Message) {
 				DisableWebPagePreview: true,
 				ParseMode:             tb.ModeMarkdown,
 			}, &tb.ReplyMarkup{
-				InlineKeyboard: setBtn,
+				InlineKeyboard: SetBtn,
 			})
 
 		}
@@ -79,8 +79,4 @@ func getApiDate(kw string, num int) (dates model.NetDiskDate, err error) {
 		}
 	}
 	return dates, nil
-}
-
-func getCallBack(t *tb.Callback) {
-	fmt.Println(t)
 }
