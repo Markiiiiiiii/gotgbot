@@ -18,20 +18,20 @@ import (
 func searchByText(t *tb.Message) {
 	//创建行内按钮，注册一个唯一的名称
 
-	SetBtn = append(SetBtn, []tb.InlineButton{
-		tb.InlineButton{
-			Unique: "next_btn",
-			Text:   "下一页",
-			Data:   "getCallBack:next",
-		},
-	})
-	SetBtn = append(SetBtn, []tb.InlineButton{
-		tb.InlineButton{
-			Unique: "pre_btn",
-			Text:   "上一页",
-			Data:   "getCallBack:prevg",
-		},
-	})
+	// SetBtn = append(SetBtn, []tb.InlineButton{
+	// 	tb.InlineButton{
+	// 		Unique: "next_btn",
+	// 		Text:   "下一页",
+	// 		Data:   "getCallBack:next",
+	// 	},
+	// })
+	// SetBtn = append(SetBtn, []tb.InlineButton{
+	// 	tb.InlineButton{
+	// 		Unique: "pre_btn",
+	// 		Text:   "上一页",
+	// 		Data:   "getCallBack:prevg",
+	// 	},
+	// })
 	if t.Text != "" {
 		dates, err := getApiDate(t.Payload, config.Page)
 		if err != nil {
@@ -47,13 +47,18 @@ func searchByText(t *tb.Message) {
 			for _, v := range dates.Resours {
 				context = context + fmt.Sprintf("[%s](%s)-[%s]\n", v.Ress.Filename, url, util.FileSize(v.Ress.Size))
 			}
+			pages := dates.Total / 30
+			// B.Send(t.Chat, context, &tb.SendOptions{
+			// 	DisableWebPagePreview: true,
+			// 	ParseMode:             tb.ModeMarkdown,
+			// }, &tb.ReplyMarkup{
+			// 	InlineKeyboard: pagesNumber(pages),
+			// })
 			B.Send(t.Chat, context, &tb.SendOptions{
 				DisableWebPagePreview: true,
 				ParseMode:             tb.ModeMarkdown,
-			}, &tb.ReplyMarkup{
-				InlineKeyboard: SetBtn,
+				ReplyMarkup:           pagesNumber(pages),
 			})
-
 		}
 	}
 }
