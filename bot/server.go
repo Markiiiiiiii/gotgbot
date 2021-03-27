@@ -28,7 +28,7 @@ func searchByText(t *tb.Message) {
 		// fmt.Printf("%#v", dates.Resours)
 		dates := <-RespDates
 		if dates.Resours == nil {
-			B.Send(t.Chat, "关键词被屏蔽或资源不存在！")
+			B.Reply(t, "您搜索的关键词被屏蔽或相关的资源不存在")
 		} else {
 			context := ""
 			url := "http://www.dalipan.com"
@@ -37,7 +37,12 @@ func searchByText(t *tb.Message) {
 			}
 			pages := PageCount(dates.Total)
 
-			B.Send(t.Chat, context, &tb.SendOptions{
+			// B.Send(t.Chat, context, &tb.SendOptions{
+			// 	DisableWebPagePreview: true,
+			// 	ParseMode:             tb.ModeMarkdown,
+			// 	ReplyMarkup:           pagesNumber(pages, t.Payload),
+			// })
+			B.Reply(t, context, &tb.SendOptions{
 				DisableWebPagePreview: true,
 				ParseMode:             tb.ModeMarkdown,
 				ReplyMarkup:           pagesNumber(pages, t.Payload),
