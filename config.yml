@@ -1,5 +1,5 @@
 bot_token: 1479970937:AAFKPdrFUmUCsnF4waRr4dZmLieY9Qj76-U
-http_proxy: http://127.0.0.1:1097
+http_proxy: http://127.0.0.1:7890
 log:
   level: release
   file: 

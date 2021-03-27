@@ -53,8 +53,8 @@ func Start() {
 		B.Send(t.Sender, "Hello World!")
 	})
 	//监听按钮的动作，调用函数
-	B.Handle(&tb.InlineButton{Unique: "next_btn"}, getCallBack)
-	B.Handle(&tb.InlineButton{Unique: "pre_btn"}, getCallBack)
+	B.Handle(&tb.InlineButton{Unique: "next_page"}, getCallBack)
+
 	//注册/search命令
 	B.Handle("/search", searchByText)
 	B.Start()

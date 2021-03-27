@@ -32,6 +32,7 @@ func searchByText(t *tb.Message) {
 	// 		Data:   "getCallBack:prevg",
 	// 	},
 	// })
+
 	if t.Text != "" {
 		dates, err := getApiDate(t.Payload, config.Page)
 		if err != nil {
@@ -57,7 +58,7 @@ func searchByText(t *tb.Message) {
 			B.Send(t.Chat, context, &tb.SendOptions{
 				DisableWebPagePreview: true,
 				ParseMode:             tb.ModeMarkdown,
-				ReplyMarkup:           pagesNumber(pages),
+				ReplyMarkup:           pagesNumber(pages, t.Payload),
 			})
 		}
 	}
