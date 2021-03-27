@@ -24,7 +24,7 @@ func getCallBack(t *tb.Callback) {
 	for _, v := range dates.Resours {
 		context = context + fmt.Sprintf("[%s](%s)-[%s]\n", v.Ress.Filename, url, util.FileSize(v.Ress.Size))
 	}
-	pages := dates.Total / 30
+	pages := PageCount(dates.Total)
 	B.Edit(t.Message, context, &tb.SendOptions{
 		DisableWebPagePreview: true,
 		ParseMode:             tb.ModeMarkdown,
@@ -55,7 +55,6 @@ func pagesNumber(n int, keyword string) *tb.ReplyMarkup {
 	// 		})
 	// 	}
 	// }
-
 	//一行最多添加八个按钮
 	if n > 8 {
 		var tmp []tb.Btn

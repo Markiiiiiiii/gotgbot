@@ -48,7 +48,7 @@ func searchByText(t *tb.Message) {
 			for _, v := range dates.Resours {
 				context = context + fmt.Sprintf("[%s](%s)-[%s]\n", v.Ress.Filename, url, util.FileSize(v.Ress.Size))
 			}
-			pages := dates.Total / 30
+			pages := PageCount(dates.Total)
 			// B.Send(t.Chat, context, &tb.SendOptions{
 			// 	DisableWebPagePreview: true,
 			// 	ParseMode:             tb.ModeMarkdown,
@@ -85,4 +85,14 @@ func getApiDate(kw string, num int) (dates model.NetDiskDate, err error) {
 		}
 	}
 	return dates, nil
+}
+
+//计算分页数
+func PageCount(number int) (pages int) {
+	if number/30 < 2 && number%30 != 0 {
+		pages = 2
+	} else {
+		pages = number / 30
+	}
+	return
 }
