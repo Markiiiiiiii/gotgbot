@@ -9,10 +9,15 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 	"gotgbot.com/v0.01/config"
 	_ "gotgbot.com/v0.01/log"
+	"gotgbot.com/v0.01/model"
 )
 
 var (
-	B *tb.Bot
+	B         *tb.Bot
+	Kw        chan string
+	Nm        chan int
+	RespDates chan model.NetDiskDate
+	Privacy   chan int
 )
 
 //初始化
@@ -44,18 +49,31 @@ func init() {
 		zap.S().Errorf("Creat bot faild: %s", err)
 		return
 	}
+	Kw = make(chan string, 100)
+	Nm = make(chan int, 100)
+	RespDates = make(chan model.NetDiskDate)
 }
 
 //Start BOT启动函数
 func Start() {
+	setCommands()
+	setHandle()
+	B.Start()
+}
 
+func setCommands() {
+	comd := []tb.Command{
+		{Text: "search", Description: "+关键字"},
+	}
+	B.SetCommands(comd)
+}
+func setHandle() {
 	B.Handle("/test", func(t *tb.Message) {
 		B.Send(t.Sender, "Hello World!")
 	})
-	//监听按钮的动作，调用函数
+	//监听按钮h回调函数
 	B.Handle(&tb.InlineButton{Unique: "next_page"}, getCallBack)
 
 	//注册/search命令
 	B.Handle("/search", searchByText)
-	B.Start()
 }

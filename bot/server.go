@@ -16,30 +16,17 @@ import (
 
 //按照传入的参数搜索
 func searchByText(t *tb.Message) {
-	//创建行内按钮，注册一个唯一的名称
-
-	// SetBtn = append(SetBtn, []tb.InlineButton{
-	// 	tb.InlineButton{
-	// 		Unique: "next_btn",
-	// 		Text:   "下一页",
-	// 		Data:   "getCallBack:next",
-	// 	},
-	// })
-	// SetBtn = append(SetBtn, []tb.InlineButton{
-	// 	tb.InlineButton{
-	// 		Unique: "pre_btn",
-	// 		Text:   "上一页",
-	// 		Data:   "getCallBack:prevg",
-	// 	},
-	// })
-
 	if t.Text != "" {
-		dates, err := getApiDate(t.Payload, config.Page)
-		if err != nil {
-			zap.S().Errorf("Get dates error: %s ", err)
-			return
-		}
+		Kw <- t.Payload
+		Nm <- config.Page
+		go getApiDate()
+		// dates, err := getApiDate(t.Payload, config.Page)
+		// if err != nil {
+		// 	zap.S().Errorf("Get dates error: %s ", err)
+		// 	return
+		// }
 		// fmt.Printf("%#v", dates.Resours)
+		dates := <-RespDates
 		if dates.Resours == nil {
 			B.Send(t.Chat, "关键词被屏蔽或资源不存在！")
 		} else {
@@ -49,12 +36,7 @@ func searchByText(t *tb.Message) {
 				context = context + fmt.Sprintf("[%s](%s)-[%s]\n", v.Ress.Filename, url, util.FileSize(v.Ress.Size))
 			}
 			pages := PageCount(dates.Total)
-			// B.Send(t.Chat, context, &tb.SendOptions{
-			// 	DisableWebPagePreview: true,
-			// 	ParseMode:             tb.ModeMarkdown,
-			// }, &tb.ReplyMarkup{
-			// 	InlineKeyboard: pagesNumber(pages),
-			// })
+
 			B.Send(t.Chat, context, &tb.SendOptions{
 				DisableWebPagePreview: true,
 				ParseMode:             tb.ModeMarkdown,
@@ -64,27 +46,26 @@ func searchByText(t *tb.Message) {
 	}
 }
 
-//调用API使用model.NetDiskDate结构体反序列化
-func getApiDate(kw string, num int) (dates model.NetDiskDate, err error) {
+func getApiDate() {
+	var dates model.NetDiskDate
+	kw := <-Kw
+	num := <-Nm
+	fmt.Println(kw)
 	zap.S().Infof("Search by Keyword: %s , Pagenumber: %d ", kw, num)
 	url := fmt.Sprintf("https://api.dalipan.com/api/v1/pan/search?t=%d&kw=%s&page=%d&line=1&site=dalipan", time.Now().Unix(), url.QueryEscape(kw), num)
 	//请求数据
 	body, err := fetch.Fetch(url)
 	if err != nil {
 		zap.S().Errorf("Read response date error: %s ", err)
-		return dates, err
 	}
-	if string(body[:]) == "privacy" {
-		return dates, err
-	} else {
+	if string(body[:]) != "privacy" {
 		//序列化json数据
 		err := json.Unmarshal(body, &dates)
 		if err != nil {
 			zap.S().Errorf("Unmarshal date error: %s ", err)
-			return dates, nil
 		}
 	}
-	return dates, nil
+	RespDates <- dates
 }
 
 //计算分页数
